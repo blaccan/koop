@@ -87,9 +87,9 @@ var Controller = extend({
               // return w/202  
               res.json( { status: 'processing' }, 202);
             } else {
-              //console.log('sending features...', itemJson.data[0].features.length);
+              // TODO this needs to be FIXED! limits downloads to 1000
               if ( itemJson.data[0].features.length > 1000){
-                itemJson.data[0].features = itemJson.data[0].features.splice(0,1);
+                itemJson.data[0].features = itemJson.data[0].features.splice(0,1000);
               }
               callback( null, itemJson );
             }

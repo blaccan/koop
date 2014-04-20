@@ -5,7 +5,7 @@ var AGOL = function(){
 
   // how to long to persist the cache of data 
   // after which data will be dropped and re-fetched
-  this.cacheLife = (30*1000);  
+  this.cacheLife = (24*60*60*1000);  
 
   // adds a service to the Cache.db
   // needs a host, generates an id 
@@ -62,10 +62,8 @@ var AGOL = function(){
         var qKey = ['agol', itemId, (options.layer || 0)].join(':');
 
         Cache.getInfo( qKey, function(err, info){
-
-          var is_expired = ( new Date().getTime() >= info.expires_at );
-          console.log('is expired?', is_expired, new Date(), info.expires_at);
-
+          
+          var is_expired = info ? ( new Date().getTime() >= info.expires_at ) : false;
           if ( is_expired ) {
             Cache.remove('agol', itemId, options, function(err, res){
               if ( itemJson.type == 'Feature Collection' ){
@@ -411,31 +409,6 @@ var AGOL = function(){
       {"statisticType":"max","onStatisticField":field,"outStatisticFieldName":"max"}];
     return url+'/'+layer+'/query?f=json&outStatistics='+JSON.stringify(json);
   };
-
-
-  // checks the age of the cache, if its older than 24 hours purges all known data 
-  /*this.checkCache = function(id, data, options, callback){
-    var self = this;
-    var qKey = ['agol', id, (options.layer || 0)].join(':');
-
-    Cache.getInfo( qKey, function(err, info){
-
-      var is_expired = ( new Date().getTime() >= info.expires_at );
-      console.log('is expired?', is_expired, new Date(), info.expires_at);
-
-      if ( is_expired ) { 
-        // get new data 
-        Cache.remove('agol', id, options, function(err, res){
-          self.getItemData( options.host, id, options, function(err, itemJson){
-            callback(err, itemJson);
-          });
-        });
-        
-      } else {
-        callback(err, is_expired);
-      }
-    });
-  };*/
 
 };
   
